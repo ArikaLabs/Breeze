@@ -1,0 +1,35 @@
+<div class="bz" id="bz" aria-label="Breeze, the control panel, working">
+  <div class="bz-head">
+    <i class="sym s-therm" aria-hidden="true"></i>
+    <span class="bz-name">Office</span>
+    <span class="bz-room" title="Room temperature, measured by the unit">23°C</span>
+    <span class="bz-hum" title="Indoor humidity 58%, measured by the unit"><i class="sym s-drop" aria-hidden="true"></i><span>58%</span></span>
+    <span class="bz-sp"></span>
+    <button class="bz-key bz-round bz-power on" id="bzPower" type="button" aria-label="Turn off" aria-pressed="true" title="Turn off"><i class="sym s-power" aria-hidden="true"></i></button>
+  </div>
+  <div class="bz-hero" aria-hidden="true">
+    <canvas class="bz-air" id="bzAir" width="600" height="152"></canvas>
+    <div class="bz-unit"><span class="bz-inner"></span><span class="bz-brand">Midea</span><span class="bz-led"></span><span class="bz-dot"></span><span class="bz-vent"></span></div>
+  </div>
+  <div class="bz-temp">
+    <div class="bz-big" aria-live="polite" aria-atomic="true"><span class="bz-whole" id="bzWhole">22</span><span class="bz-col"><span class="bz-unitsym">°C</span><span class="bz-frac" id="bzFrac">.5</span></span></div>
+    <span class="bz-sp"></span>
+    <div class="bz-eco" id="bzEco"><i class="sym s-leaf" aria-hidden="true"></i><span>AI Eco</span><button class="bz-sw" id="bzEcoSw" type="button" role="switch" aria-checked="false" aria-label="AI Eco"><span class="bz-thumb"></span></button></div>
+  </div>
+  <div class="bz-slider">
+    <button class="bz-key bz-round" id="bzMinus" type="button" aria-label="Half a degree cooler"><i class="sym s-minus" aria-hidden="true"></i></button>
+    <div class="bz-track" id="bzTrack" role="slider" tabindex="0" aria-label="Target temperature" aria-valuemin="16" aria-valuemax="30" aria-valuenow="22" aria-valuetext="22 degrees"><span class="bz-fill" id="bzFill"></span><span class="bz-knob" id="bzKnob"></span></div>
+    <button class="bz-key bz-round" id="bzPlus" type="button" aria-label="Half a degree warmer"><i class="sym s-plus" aria-hidden="true"></i></button>
+  </div>
+  <div class="bz-range" aria-hidden="true"><span>16°</span><span>30°</span></div>
+  <div class="bz-tiles">
+    <button class="bz-key bz-tile" id="bzMode" type="button" aria-haspopup="menu" aria-expanded="false"><span class="bz-row"><i class="sym s-snowflake" id="bzModeIcon" aria-hidden="true"></i><i class="sym s-chev bz-chev" aria-hidden="true"></i></span><span class="bz-grow"></span><span class="bz-lbl">Mode</span><span class="bz-val" id="bzModeVal">Cool</span></button>
+    <button class="bz-key bz-tile" id="bzFan" type="button" aria-haspopup="menu" aria-expanded="false"><span class="bz-row"><i class="sym s-fan" aria-hidden="true"></i><i class="sym s-chev bz-chev" aria-hidden="true"></i></span><span class="bz-grow"></span><span class="bz-lbl">Fan</span><span class="bz-val" id="bzFanVal">Auto</span></button>
+    <button class="bz-key bz-tile" id="bzFlash" type="button" aria-pressed="false"><span class="bz-row"><i class="sym s-bolt" aria-hidden="true"></i><span class="bz-tdot" id="bzFlashDot"></span></span><span class="bz-grow"></span><span class="bz-lbl">Flash</span><span class="bz-val" id="bzFlashVal">Off</span></button>
+    <button class="bz-key bz-tile" id="bzSwing" type="button" aria-haspopup="menu" aria-expanded="false"><span class="bz-row"><i class="sym s-wind" aria-hidden="true"></i><i class="sym s-chev bz-chev" aria-hidden="true"></i></span><span class="bz-grow"></span><span class="bz-lbl">Airflow</span><span class="bz-val" id="bzSwingVal">Both</span></button>
+  </div>
+  <div class="bz-foot">
+    <span class="bz-status"><i class="sym s-shield" aria-hidden="true"></i><span>Connected</span></span><span id="bzWatts">· 820 W</span><span class="bz-sp"></span><button class="bz-settings" type="button" aria-label="Settings" title="Settings"><i class="sym s-sliders" aria-hidden="true"></i></button>
+  </div>
+  <div class="bz-menu" id="bzMenu" role="menu" hidden></div>
+</div>

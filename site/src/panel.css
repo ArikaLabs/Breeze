@@ -1,0 +1,104 @@
+/* The Breeze panel, measured from Sources/Breeze/*.swift. Points become CSS pixels; SwiftUI shadow radius r becomes a CSS blur of 2r. */
+.bz{position:relative;width:372px;height:541px;box-sizing:border-box;padding:20px;display:flex;flex-direction:column;border-radius:11px;box-shadow:inset 0 0 0 1px var(--pop-edge);background:linear-gradient(var(--wash),var(--wash)) 0 0 / 100% 100%,var(--stone) 0 0 / 960px repeat var(--surface);color:var(--ink);font:400 15px/normal -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;text-align:left;letter-spacing:normal;user-select:none;-webkit-user-select:none;--cool:#5f88a8;--heat:#b5593b;--shadow:rgba(74,58,40,.22);--air:var(--cool)}
+:root[data-theme="dark"] .bz{--cool:#a9c4da;--heat:#e8907c;--shadow:rgba(0,0,0,.6)}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .bz{--cool:#a9c4da;--heat:#e8907c;--shadow:rgba(0,0,0,.6)} }
+.bz *{box-sizing:border-box}
+:where(.bz button){font:inherit;color:inherit;border:0;padding:0;margin:0;background:none;cursor:default;-webkit-appearance:none;appearance:none}
+.bz button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.sym{display:inline-block;flex:none;background:currentColor;-webkit-mask-image:var(--i);-webkit-mask-size:100% 100%;-webkit-mask-repeat:no-repeat;-webkit-mask-position:center;mask-image:var(--i);mask-size:100% 100%;mask-repeat:no-repeat;mask-position:center}
+.bz-sp{flex:1}
+.bz-key{background:var(--raised);box-shadow:inset 0 0 0 1px var(--edge),0 2px 10px var(--shadow);transition:background .15s ease}
+.bz-key:hover{background:var(--selected)}
+.bz-round{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:none}
+
+/* Symbols: the exact SF Symbol rendered at the size and weight the view uses; width and height are the symbol's own point size. */
+.s-therm{--i:url(assets/sym/thermometer.png);width:13px;height:20px}
+.s-drop{--i:url(assets/sym/drop.png);width:10px;height:13px}
+.s-power{--i:url(assets/sym/power.png);width:23px;height:23px}
+.s-minus{--i:url(assets/sym/minus.png);width:18px;height:5px}
+.s-plus{--i:url(assets/sym/plus.png);width:18px;height:16px}
+.s-leaf{--i:url(assets/sym/leaf.png);width:20px;height:18px}
+.s-snowflake{--i:url(assets/sym/snowflake.png);width:22px;height:22px}
+.s-sun{--i:url(assets/sym/sun.png);width:26px;height:24px}
+.s-dry{--i:url(assets/sym/dry.png);width:18px;height:22px}
+.s-fan{--i:url(assets/sym/fan.png);width:26px;height:24px}
+.s-auto{--i:url(assets/sym/auto.png);width:25px;height:22px}
+.s-bolt{--i:url(assets/sym/bolt.png);width:20px;height:25px}
+.s-wind{--i:url(assets/sym/wind.png);width:25px;height:20px}
+.s-chev{--i:url(assets/sym/chevron.png);width:12px;height:8px}
+.s-shield{--i:url(assets/sym/shield.png);width:15px;height:15px}
+.s-sliders{--i:url(assets/sym/sliders.png);width:20px;height:16px}
+
+/* Header */
+.bz-head{display:flex;align-items:center;gap:8px;height:46px;flex:none}
+.bz-head .s-therm{color:var(--ink-muted)}
+.bz-name{font:400 18px/normal ui-serif,-apple-system-ui-serif,"New York","Iowan Old Style",Georgia,serif}
+.bz-room{font-weight:600}
+.bz-hum{display:flex;align-items:center;gap:3px;font-size:14px;color:var(--ink-muted);font-variant-numeric:tabular-nums}
+.bz-power.on,.bz-power.on:hover{background:var(--primary);color:var(--on-primary)}
+
+/* Hero: the unit and the air beneath it */
+.bz-hero{position:relative;height:132px;flex:none}
+.bz-unit{position:absolute;left:60px;top:18px;width:212px;height:56px;border-radius:10px;background:linear-gradient(#fbf8f2,#d8d1c6);box-shadow:0 10px 28px var(--shadow)}
+.bz-inner{position:absolute;left:7px;top:4px;width:198px;height:44px;border-radius:8px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.07)}
+.bz-vent{position:absolute;left:14px;top:45px;width:184px;height:6px;border-radius:3px;background:#2a2420}
+.bz-brand{position:absolute;left:20px;top:12px;transform:translate(-50%,-50%);font:600 7px/normal -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;color:rgba(0,0,0,.35);white-space:nowrap}
+.bz-led{position:absolute;left:171px;top:32px;width:14px;height:4px;border-radius:1.5px;background:var(--success);opacity:.7}
+.bz-dot{position:absolute;left:196px;top:32px;width:4px;height:4px;border-radius:50%;background:var(--air);box-shadow:0 0 6px var(--air)}
+.bz.off .bz-dot{background:rgba(0,0,0,.12);box-shadow:none}
+.bz-air{position:absolute;left:16px;top:56px;width:300px;height:76px;filter:blur(1.4px);pointer-events:none;transition:opacity .5s ease}
+.bz.off .bz-air{opacity:0}
+
+/* Readout and Eco */
+.bz-temp{display:flex;align-items:center;height:69px;flex:none}
+.bz-big{display:flex;align-items:last baseline;gap:5px}
+.bz-whole{font-size:58px;font-weight:500;font-variant-numeric:tabular-nums;display:inline-block}
+.bz-whole.roll{animation:bz-roll .2s ease-in-out}
+@keyframes bz-roll{from{transform:translateY(calc(var(--dir,1) * 10px));opacity:0}to{transform:none;opacity:1}}
+.bz-col{display:flex;flex-direction:column;justify-content:space-between;width:34px;height:50px;font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
+.bz-unitsym{color:var(--ink-muted)}
+.bz-frac{opacity:0;transition:opacity .2s ease}
+.bz.half .bz-frac{opacity:1}
+.bz-eco{display:flex;align-items:center;gap:10px;padding:13px 16px;border-radius:14px;background:var(--raised);box-shadow:inset 0 0 0 1px var(--edge),0 2px 10px var(--shadow);font-weight:500;white-space:nowrap}
+.bz-eco .s-leaf{color:var(--ink)}
+.bz-eco.on .s-leaf{color:var(--success)}
+.bz-sw{position:relative;width:40px;height:24px;border-radius:12px;background:var(--sunken);box-shadow:inset 0 0 0 1px var(--line);transition:background .15s ease,box-shadow .15s ease;flex:none}
+.bz-sw .bz-thumb{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:var(--raised);box-shadow:inset 0 0 0 1px var(--edge),0 1px 4px var(--shadow);transition:left .15s ease,background .15s ease}
+.bz-sw.on{background:var(--primary);box-shadow:inset 0 0 0 1px var(--edge)}
+.bz-sw.on .bz-thumb{left:18px;background:var(--on-primary)}
+
+/* Slider */
+.bz-slider{display:flex;align-items:center;gap:12px;margin-top:14px;height:46px;flex:none}
+.bz-track{position:relative;flex:1;height:46px;border-radius:14px;background:var(--sunken);box-shadow:inset 0 0 0 1px var(--line);touch-action:none}
+.bz-fill{position:absolute;left:0;top:0;bottom:0;width:calc((100% - 30px) * var(--f,0) + 30px);border-radius:14px;background:linear-gradient(90deg,color-mix(in srgb,var(--primary) 45%,transparent),color-mix(in srgb,var(--primary) 95%,transparent));transition:width .15s cubic-bezier(.2,.8,.2,1)}
+.bz-knob{position:absolute;top:6px;left:calc((100% - 30px) * var(--f,0));width:30px;height:34px;border-radius:9px;background:var(--raised);box-shadow:inset 0 0 0 1px var(--edge),0 2px 8px var(--shadow);transition:left .15s cubic-bezier(.2,.8,.2,1)}
+.bz.dragging .bz-knob,.bz.dragging .bz-fill{transition:none}
+.bz-range{display:flex;justify-content:space-between;padding:0 62px;margin-top:8px;font-size:12px;color:var(--ink-muted);flex:none}
+.bz.off .bz-temp,.bz.off .bz-slider,.bz.off .bz-range{opacity:.55}
+
+/* Tiles */
+.bz-tiles{display:flex;gap:10px;margin-top:18px;height:108px;flex:none}
+.bz-tile{flex:1;min-width:0;height:108px;border-radius:14px;padding:13px;display:flex;flex-direction:column;align-items:stretch;text-align:left;position:relative}
+.bz-row{display:flex;align-items:center;justify-content:space-between;height:24px;flex:none}
+.bz-chev{color:var(--ink-muted)}
+.bz-tdot{width:7px;height:7px;border-radius:50%;background:var(--line-strong);flex:none;transition:background .15s ease,box-shadow .15s ease}
+.bz-tdot.on{background:var(--success);box-shadow:0 0 8px color-mix(in srgb,var(--success) 80%,transparent)}
+.bz-grow{flex:1;min-height:6px}
+.bz-lbl{font-size:12px;color:var(--ink-muted);white-space:nowrap}
+.bz-val{font-size:15px;font-weight:600;margin-top:2px;white-space:nowrap;transform-origin:left center}
+
+/* Footer */
+.bz-foot{display:flex;align-items:center;gap:6px;margin-top:18px;height:28px;font-size:13px;color:var(--ink-muted);flex:none}
+.bz-status{display:flex;align-items:center;gap:8px}
+.bz-settings{width:28px;height:28px;display:grid;place-items:center;color:var(--ink-muted)}
+
+/* The system menu a tile opens: macOS's own material, not the stone. */
+.bz-menu{position:absolute;z-index:6;min-width:132px;padding:5px;border-radius:7px;background:rgba(242,242,242,.82);backdrop-filter:blur(40px) saturate(1.8);-webkit-backdrop-filter:blur(40px) saturate(1.8);box-shadow:0 0 0 .5px rgba(0,0,0,.18),0 12px 32px rgba(0,0,0,.22);font:400 13px/normal -apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;color:#1d1d1f}
+:root[data-theme="dark"] .bz-menu{background:rgba(44,44,46,.84);color:#f2f2f2;box-shadow:0 0 0 .5px rgba(255,255,255,.14),0 12px 32px rgba(0,0,0,.6)}
+.bz-menu button{display:flex;align-items:center;gap:8px;width:100%;height:22px;padding:0 8px;border-radius:5px;text-align:left;white-space:nowrap;color:inherit}
+.bz-menu button:hover,.bz-menu button:focus-visible{background:#2f7cf6;color:#fff;outline:0}
+.bz-menu .sym{height:14px}
+.bz-menu .s-snowflake{width:14px}.bz-menu .s-sun{width:15px}.bz-menu .s-dry{width:11px}.bz-menu .s-fan{width:15px}.bz-menu .s-auto{width:16px}
+.bz-menu hr{border:0;height:1px;margin:5px 9px;background:rgba(0,0,0,.1)}
+:root[data-theme="dark"] .bz-menu hr{background:rgba(255,255,255,.14)}
+@media (prefers-reduced-motion:reduce){ .bz-whole.roll{animation:none} .bz *{transition:none!important} }

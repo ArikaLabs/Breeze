@@ -1,0 +1,17 @@
+.build/
+build/
+*.xcodeproj
+.DS_Store
+*.app
+*.signed.shortcut
+shortcuts/signed/
+dist/
+.vercel/
+symbols/
+*.dSYM
+.swiftpm/
+xcuserdata/
+.env
+site/.env
+node_modules/
+.claude/settings.local.json
