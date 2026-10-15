@@ -51,6 +51,27 @@ final class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
 
+    /// A plain notice with no actions, for example a breeze:// link that names a unit Breeze does not have.
+    func postNotice(title: String, body: String) {
+        guard let center else { return }
+        let send: () -> Void = {
+            let content = UNMutableNotificationContent()
+            content.title = title
+            content.body = body
+            center.add(UNNotificationRequest(identifier: "breeze.notice", content: content, trigger: nil))
+        }
+        center.getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .notDetermined:
+                center.requestAuthorization(options: [.alert, .sound]) { granted, _ in if granted { send() } }
+            case .authorized, .provisional:
+                send()
+            default:
+                break
+            }
+        }
+    }
+
     func clear() {
         center?.removeDeliveredNotifications(withIdentifiers: [Self.requestIdentifier])
     }

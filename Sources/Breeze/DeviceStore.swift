@@ -488,7 +488,20 @@ final class DeviceStore: ObservableObject {
         for item in URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems ?? [] {
             params[item.name.lowercased()] = item.value ?? ""
         }
-        let target = params["unit"].flatMap { name in sessions.first { $0.name.lowercased() == name.lowercased() } } ?? current
+        let target: DeviceSession?
+        if let wanted = params["unit"], !wanted.isEmpty {
+            guard let match = sessions.first(where: { $0.name.lowercased() == wanted.lowercased() }) else {
+                // Same rule as the App Intents: a named unit that is not linked is an error, never a fallback
+                // to whichever unit happens to be selected.
+                breezeLog("url command: \(command) ignored, no unit called \(wanted)")
+                notifications.postNotice(title: "Breeze has no unit called \(wanted)",
+                                         body: "The breeze:// link names a unit that is not linked. Check the unit name in Settings.")
+                return
+            }
+            target = match
+        } else {
+            target = current
+        }
         breezeLog("url command: \(command) \(params)")
         func onOff(_ v: String?) -> Bool? {
             guard let v = v?.lowercased() else { return nil }

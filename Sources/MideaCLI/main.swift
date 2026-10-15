@@ -1,5 +1,6 @@
 import Foundation
 import MideaKit
+import Security
 
 // Minimal CLI mirroring msmart-ng, used to exercise MideaKit against real units.
 
@@ -68,12 +69,32 @@ enum Saved {
             ?? units.first
         guard let p = pick, let id = deviceId(p.device), let ip = p.device["ip"] as? String else { return nil }
         let port = UInt16((p.device["port"] as? NSNumber)?.intValue ?? 6444)
+        guard let (token, key) = credentials(for: id) else { return nil }
+        return SavedUnit(name: p.name, ip: ip, port: port, id: id, token: token, key: key)
+    }
+
+    /// Ad-hoc builds of Breeze keep credentials in a user-only file; stably signed builds keep them in the
+    /// Keychain (macOS asks once whether midea-cli may read the item).
+    static func credentials(for id: UInt64) -> (token: String, key: String)? {
         let credURL = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("Breeze/credentials.json")
-        guard let cdata = try? Data(contentsOf: credURL),
-              let creds = try? JSONSerialization.jsonObject(with: cdata) as? [String: [String: String]],
-              let c = creds[String(id)], let token = c["token"], let key = c["key"] else { return nil }
-        return SavedUnit(name: p.name, ip: ip, port: port, id: id, token: token, key: key)
+        if let cdata = try? Data(contentsOf: credURL),
+           let creds = try? JSONSerialization.jsonObject(with: cdata) as? [String: [String: String]],
+           let c = creds[String(id)], let token = c["token"], let key = c["key"] {
+            return (token, key)
+        }
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: "com.arikalabs.breeze.device",
+            kSecAttrAccount as String: String(id),
+            kSecReturnData as String: true,
+            kSecMatchLimit as String: kSecMatchLimitOne,
+        ]
+        var item: CFTypeRef?
+        guard SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess, let data = item as? Data,
+              let c = try? JSONSerialization.jsonObject(with: data) as? [String: String],
+              let token = c["token"], let key = c["key"] else { return nil }
+        return (token, key)
     }
 }
 

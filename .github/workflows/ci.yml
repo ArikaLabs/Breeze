@@ -7,9 +7,22 @@ on:
 
 jobs:
   test:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: swift --version
       - run: swift build -c release
       - run: swift test
+      - name: Package the app the way releases are built
+        run: |
+          ./scripts/build-app.sh
+          ./scripts/make-dist.sh
+          ls -l dist
+      - name: Hygiene
+        run: |
+          # The shipped executable must carry no build-machine paths and no debug stab entries.
+          ! grep -a -q "/Users/" build/Breeze.app/Contents/MacOS/Breeze
+          test "$(nm -ap build/Breeze.app/Contents/MacOS/Breeze | grep -c ' OSO ')" = 0
+          # Tracked files must not name a home directory or a private LAN address.
+          ! git grep -nE "/Users/[A-Za-z]|192\.168\.[0-9]+\.[0-9]+" -- . ':!.github/workflows/ci.yml'
+          codesign --verify --deep --strict build/Breeze.app

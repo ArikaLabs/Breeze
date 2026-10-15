@@ -38,6 +38,7 @@ if [[ -n "$PROFILE" ]]; then
   rm dist/notarize.zip
 fi
 
+xattr -cr "$APP"   # no extended attributes from the build machine travel with the bundle
 echo "▸ dist/Breeze-$VERSION.zip"
 ditto -c -k --keepParent --norsrc --noextattr "$APP" "dist/Breeze-$VERSION.zip"
 

@@ -122,6 +122,10 @@ final class FakeMideaDevice: @unchecked Sendable {
         let decrypted = [UInt8](decryptedData)
         let pad = Int(header[5] >> 4)
         let lanPacket = Array(decrypted[2..<(decrypted.count - pad)])
+        // A real unit ignores packets addressed to another device id (LAN header bytes 20..<28, little endian).
+        guard lanPacket.count >= 28 else { return }
+        let addressed = lanPacket[20..<28].enumerated().reduce(UInt64(0)) { $0 | (UInt64($1.element) << (8 * UInt64($1.offset))) }
+        guard addressed == deviceId else { return }
         guard let frame = try? LanPacket.decode(lanPacket), frame.count > 13 else { return }
         // Command frame: header(10) + payload + messageId + crc8 + checksum
         let payload = Array(frame[10..<(frame.count - 3)])
@@ -253,7 +257,7 @@ final class FakeMideaDevice: @unchecked Sendable {
 final class FakeDeviceTests: XCTestCase {
     static let token = [UInt8](repeating: 0xAB, count: 64)
     static let key = Data((0..<32).map { UInt8($0 * 7 + 1) })
-    static let deviceId: UInt64 = 0x1234_5678_9ABC   // any 48-bit value; the fake unit answers to whatever it is given
+    static let deviceId: UInt64 = 0x1234_5678_9ABC   // any 48-bit value; the fake unit answers only to this id
 
     private func makeClient(_ fake: FakeMideaDevice, token: [UInt8]? = nil) async -> AirConditioner {
         let ac = AirConditioner(ip: "127.0.0.1", port: fake.port, id: fake.deviceId)
@@ -366,5 +370,19 @@ final class FakeDeviceTests: XCTestCase {
         }
         let online = await ac.online
         XCTAssertFalse(online)
+    }
+
+    func testPacketsForAnotherDeviceIdAreIgnored() async throws {
+        let fake = try FakeMideaDevice(token: Self.token, key: Self.key, deviceId: Self.deviceId)
+        let ac = AirConditioner(ip: "127.0.0.1", port: fake.port, id: Self.deviceId &+ 1)
+        await ac.setCredentials(token: Data(Self.token), key: Self.key)
+        try await ac.authenticate()
+        do {
+            _ = try await ac.refresh()
+            XCTFail("a unit must not answer a packet addressed to another device id")
+        } catch let error as LanError {
+            XCTAssertEqual(error, .timeout)
+        }
+        await ac.disconnect()
     }
 }

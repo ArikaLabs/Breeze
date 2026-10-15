@@ -87,7 +87,7 @@ breeze://off                     power off
 breeze://power?on=toggle         toggle power
 breeze://set?mode=heat&fan=low&swing=vertical&eco=on
 breeze://show                    open the popover
-…&unit=Meeting%20room            target a specific unit (default: the selected one)
+…&unit=Meeting%20room            target a specific unit (default: the selected one; an unknown name does nothing and shows a notification)
 ```
 
 **CLI.** `swift build -c release` also produces `.build/release/midea-cli`, which can reuse what the app linked:
